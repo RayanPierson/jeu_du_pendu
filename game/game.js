@@ -10,6 +10,7 @@ function onInit() {
   displayWordToFind();
   getThemeSelect();
   getSelectedDificulty();
+  displayAttemps();
 }
 
 function getPlayerName() {
@@ -99,7 +100,7 @@ function setCharAt(str, index, chr) {
 }
 
 function lettreClick(clickedLettre) {
-  console.log("itsclick", clickedLettre); //si la lettre choisit est dans le mot donc ont affiche la lettre a la place du tirets, sinon ont retire un essaies.
+   //si la lettre choisit est dans le mot donc ont affiche la lettre a la place du tirets, sinon ont retire un essaies.
   if (wordToFind.includes(clickedLettre)) {
     let indexesOfLettre = occurences(wordToFind, clickedLettre);
     console.log("indexesOfLettre", indexesOfLettre);
@@ -110,9 +111,12 @@ function lettreClick(clickedLettre) {
     console.log("currentWord", currentWord);
   } else {
     attempsNumber = attempsNumber - 1;
-    attempsNumber = document.getElementById("attemps-number").innerHTML =
-      attempsNumber;
+    displayAttemps();
   }
+}
+
+function displayAttemps(){
+  document.getElementById("attemps-number").innerHTML = attempsNumber;
 }
 
 function occurences(myWordToFind, myClickedLettre) {
