@@ -2,15 +2,16 @@ let wordToFind = "";
 let clickedLettreView = "";
 let attempsNumber = 7;
 let currentWord = "";
+let currentThemeSelect ="";
+
 function onInit() {
   getPlayerName();
   displayAlphabet();
+  getThemeSelect();
   generateWordToFind();
   generateCurrentWord();
   displayWordToFind();
-  getThemeSelect();
   getSelectedDificulty();
-  displayAttemps();
 }
 
 function getPlayerName() {
@@ -19,7 +20,7 @@ function getPlayerName() {
 }
 
 function getThemeSelect() {
-  const currentThemeSelect = localStorage.getItem("theme");
+  currentThemeSelect = localStorage.getItem("theme");
   document.getElementById("theme-select").innerHTML = currentThemeSelect;
 }
 
@@ -27,6 +28,18 @@ function getSelectedDificulty() {
   const currentSelectedDifficulty = localStorage.getItem("difficulty");
   document.getElementById("selected-difficulty").innerHTML =
     currentSelectedDifficulty;
+  // si diff est facile donc attemps = 7 , sinon pour difficile ,attemps = 4
+  switch (currentSelectedDifficulty) {
+    case "facile":
+      attempsNumber = 7;
+      break;
+    case "difficile":
+      attempsNumber = 4;
+      break;
+    default:
+      console.log(`Sorry, we are out of ${currentSelectedDifficulty}.`);
+  }
+  displayAttemps();
 }
 
 function displayAlphabet() {
@@ -79,7 +92,13 @@ function displayWordToFind() {
 }
 
 function generateWordToFind() {
-  let themeWords = ["LION", "CHIEN", "CHEVRE", "CHAT", "MOUTON"];
+  let themeWords ;
+  if(currentThemeSelect == 'animaux'){
+    themeWords = ["LION", "CHIEN", "CHEVRE", "CHAT", "MOUTON"];
+  }
+  if(currentThemeSelect == 'marque'){
+    themeWords = ["NIKE", "ADIDAS", "JORDAN", "ZARA", "CARREFOUR"]
+  }
   const randomIndex = Math.floor(Math.random() * themeWords.length);
   wordToFind = themeWords[randomIndex];
   console.log(wordToFind);
@@ -100,22 +119,34 @@ function setCharAt(str, index, chr) {
 }
 
 function lettreClick(clickedLettre) {
-   //si la lettre choisit est dans le mot donc ont affiche la lettre a la place du tirets, sinon ont retire un essaies.
-  if (wordToFind.includes(clickedLettre)) {
-    let indexesOfLettre = occurences(wordToFind, clickedLettre);
-    console.log("indexesOfLettre", indexesOfLettre);
-    for (let j = 0; j < indexesOfLettre.length; j++) {
-      currentWord = setCharAt(currentWord, indexesOfLettre[j], clickedLettre);
+  if (attempsNumber > 0) {
+    //si la lettre choisit est dans le mot donc ont affiche la lettre a la place du tirets, sinon ont retire un essaies.
+    if (wordToFind.includes(clickedLettre)) {
+      let indexesOfLettre = occurences(wordToFind, clickedLettre);
+      console.log("indexesOfLettre", indexesOfLettre);
+      for (let j = 0; j < indexesOfLettre.length; j++) {
+        currentWord = setCharAt(currentWord, indexesOfLettre[j], clickedLettre);
+      }
+      displayWordToFind();
+      if(wordToFind == currentWord){
+        finishGame('win')
+      }
+    } else {
+      attempsNumber = attempsNumber - 1;
+      displayAttemps();
     }
-    displayWordToFind();
-    console.log("currentWord", currentWord);
   } else {
-    attempsNumber = attempsNumber - 1;
-    displayAttemps();
+    //redirect to finish game with lose
+    finishGame('lose');
   }
 }
 
-function displayAttemps(){
+function finishGame(loseOrWind){
+  localStorage.setItem("finish-status", loseOrWind);
+  window.location.href = "../finish-game/finish.html";
+}
+
+function displayAttemps() {
   document.getElementById("attemps-number").innerHTML = attempsNumber;
 }
 
