@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Jeu du Pendu</title>
+    <script src="startgame.js"></script>
+    <link href="startgame.css" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="game-start-container">
+        <h1 class="gametitle">Le Pendu</h1>
+          <select name="theme" id="theme-select" onchange="changeTheme()">  
+              <option value="animaux">animaux</option>  
+              <option value="marque">marque</option>  
+          </select>
+          <select name="difficulty" id="select-difficulty" onchange="changeDifficulty()">  
+            <option value="facile">facile</option>  
+            <option value="difficile">difficile</option>  
+        </select>
+         <input class="input-pseudonyme" onchange="changePseudonyme()" placeholder="Pseudonyme" required>
+        <button class="button-start" onclick="startGame()">Commencer</button>
+
+    </div>
+</body>
